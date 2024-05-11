@@ -21,7 +21,7 @@ def find_speed(id, frame_rate):
 
 model = YOLO('yolov8l.pt')
 
-v_path = "4K Road traffic video for object detection and tracking - free download now!.mp4"
+v_path = "video.mp4"
 vcap = cv2.VideoCapture(v_path)
 tracker = DeepSort(max_age=20)
 
