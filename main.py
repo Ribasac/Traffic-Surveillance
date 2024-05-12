@@ -37,11 +37,17 @@ speed = {}
 
 colorR = {2:(235, 131, 5),
           3:(5, 131, 235),
-          5:(235, 5, 131),
+          5:(131, 235, 5),
           6:(131, 235, 5),
           7:(131, 235, 5)}
 
 frame_count = 0
+
+frame_w = int(vcap.get(3))
+frame_h = int(vcap.get(4))
+size = (frame_w, frame_h) 
+
+video_result = cv2.VideoWriter('result.avi',  cv2.VideoWriter_fourcc(*'MJPG'), 10, size) 
 
 while ret:
 
@@ -72,7 +78,7 @@ while ret:
         id = r.track_id
         cls = r.det_class
         
-        cvzone.cornerRect(frame, (x1, y1, w, h), l=5, t=2, rt=1, colorR=colorR[cls], colorC=(255, 255, 0))
+        cvzone.cornerRect(frame, (x1, y1, w, h), l=5, t=2, rt=1, colorR=colorR[cls if cls else 2], colorC=(255, 255, 0))
         cvzone.putTextRect(frame, f' {int(id)}', (max(0, x1), max(40, y1)), scale=1, thickness=2, offset=1, colorR=(74, 84, 5))
         cv2.line(frame, (256, 256), (720, 256), (100, 230, 100), thickness=4)
         cv2.line(frame, (226, 326), (740, 326), (100, 230, 100), thickness=4)
@@ -86,10 +92,8 @@ while ret:
                     carid.append(id)
                 elif cls == 3:
                     mcycid.append(id)
-                elif cls == 5:
+                elif cls == 5 or 7:
                     busid.append(id)
-                elif cls == 7:
-                    truckid.append(id)
         
         if (256<=mx<=720 and 250<=my<=260): #speed line enter
             if not id in s_start:
@@ -103,7 +107,14 @@ while ret:
         if id in speed:
             cvzone.putTextRect(frame, f'speed: {speed[id]}km/hr', (x1+50, y1), scale=1, thickness=2, offset=1, colorR=(74, 84, 5))
 
-    cvzone.putTextRect(frame, f'Cars: {int(len(carid))} MotorCycles: {int(len(mcycid))} Buses: {int(len(busid))} Trucks: {int(len(truckid))} ', (10, 32), font=cv2.FONT_HERSHEY_DUPLEX, scale=1, thickness=2, offset=5, colorR=(59, 51, 26))
+    cvzone.putTextRect(frame, f'Cars: {int(len(carid))} MotorCycles: {int(len(mcycid))} Large vehicles: {int(len(busid))} ', (10, 32), font=cv2.FONT_HERSHEY_DUPLEX, scale=1, thickness=2, offset=5, colorR=(59, 51, 26))
 
-    cv2.imshow('frame', frame)
+    video_result.write(frame)
+    # cv2.imshow('frame', frame)
     cv2.waitKey(1)
+
+vcap.release()
+video_result.release() 
+    
+# Closes all the frames 
+cv2.destroyAllWindows() 
