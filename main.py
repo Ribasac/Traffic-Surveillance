@@ -43,11 +43,11 @@ colorR = {2:(235, 131, 5),
 
 frame_count = 0
 
-frame_w = int(vcap.get(3))
-frame_h = int(vcap.get(4))
-size = (frame_w, frame_h) 
+# frame_w = int(vcap.get(3))
+# frame_h = int(vcap.get(4))
+# size = (frame_w, frame_h) 
 
-video_result = cv2.VideoWriter('result.avi',  cv2.VideoWriter_fourcc(*'MJPG'), 10, size) 
+# video_result = cv2.VideoWriter('result.avi',  cv2.VideoWriter_fourcc(*'MJPG'), 10, size) 
 
 while ret:
 
@@ -109,12 +109,12 @@ while ret:
 
     cvzone.putTextRect(frame, f'Cars: {int(len(carid))} MotorCycles: {int(len(mcycid))} Large vehicles: {int(len(busid))} ', (10, 32), font=cv2.FONT_HERSHEY_DUPLEX, scale=1, thickness=2, offset=5, colorR=(59, 51, 26))
 
-    video_result.write(frame)
-    # cv2.imshow('frame', frame)
+    # video_result.write(frame)
+    cv2.imshow('frame', frame)
     cv2.waitKey(1)
 
 vcap.release()
-video_result.release() 
+# video_result.release() 
     
 # Closes all the frames 
 cv2.destroyAllWindows() 
